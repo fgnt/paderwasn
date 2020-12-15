@@ -131,3 +131,12 @@ def map2ref(pos, ref_pos, allow_reflection=False):
 def rot_mat2rot_angle(rot_mat):
     """ Return the angle corresponding to the given 2D rotation matrix."""
     return np.arctan2(rot_mat[1, 0], rot_mat[0, 0])
+
+
+def rot_angle2rot_mat(angle):
+    """ Return the angle corresponding to the given 2D rotation matrix."""
+    rot_mat = np.asarray([
+        [np.cos(angle), -np.sin(angle)],
+        [np.sin(angle), np.cos(angle)]
+    ])
+    return rot_mat
