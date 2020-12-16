@@ -90,7 +90,7 @@ def fit_select(rel_src_pos, node_pos, node_orients, outlier_percent, error):
     """Observation selection used for outlier rejection
 
     Select the best observations based on how well the observations fit to the
-    model defined by the given node positions and orientatuons.
+    model defined by the given node positions and orientations.
 
     Args:
         rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes))):
