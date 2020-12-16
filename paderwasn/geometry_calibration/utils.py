@@ -134,7 +134,7 @@ def rot_mat2rot_angle(rot_mat):
 
 
 def rot_angle2rot_mat(angle):
-    """ Return the angle corresponding to the given 2D rotation matrix."""
+    """ Return the 2D rotation matrix corresponding to the given angle."""
     rot_mat = np.asarray([
         [np.cos(angle), -np.sin(angle)],
         [np.sin(angle), np.cos(angle)]
