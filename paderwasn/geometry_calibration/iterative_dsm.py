@@ -10,9 +10,9 @@ def get_rel_src_pos(doas, dists):
     source node distances.
 
     Args:
-        doas (ndarray (shape=(n_srcs, n_nodes)):
+        doas (ndarray (shape=(n_srcs, n_nodes))):
             Array containing DoAs.
-        doas (ndarray (shape=(n_srcs, n_nodes)):
+        dists (ndarray (shape=(n_srcs, n_nodes))):
             Array containing source node distances.
     """
     dir_vects = np.asarray([np.cos(doas), np.sin(doas)])
@@ -28,10 +28,10 @@ def dsm_calib(rel_src_pos, ref_pos, weights=None):
     rel_src_pos ont the reference source positions ref_pos.
 
     Args:
-        rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes)):
+        rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes))):
             Array containing the relative source positions described in the
             local coordinate systems of the sensor nodes.
-        ref_pos (ndarray (shape=(2, n_srcs)):
+        ref_pos (ndarray (shape=(2, n_srcs))):
             Array containing the source positions onto which the relative
             source positions have to be projected.
         weights:
@@ -90,18 +90,16 @@ def fit_select(rel_src_pos, node_pos, node_orients, outlier_percent, error):
     """Observation selection used for outlier rejection
 
     Select the best observations based on how well the observations fit to the
-    model defined by the given node positions and orientations.
+    model defined by the given geometry and source positions.
 
     Args:
         rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes))):
             Array containing the relative source positions described in the
             local coordinate systems of the sensor nodes.
         node_pos (ndarray (shape=(2, n_nodes)):
-            Array containing the node positions to be used for
-            source localization.
+            Array containing the node positions.
         node_orients (ndarray (shape=(2, n_nodes))):
-            Array containing the node orientations to be used for
-            source localization.
+            Array containing the node orientations.
         outlier_percent (float):
             Percentage of observations to be considered as outliers.
         error (ndarray (shape=(2, n_srcs, n_nodes))):
