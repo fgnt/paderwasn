@@ -19,3 +19,8 @@ Install package:
 ```bash
 $ pip install --user -e paderwasn
 ```
+
+## Content
+* Geometry calibration:
+    + Algorithms can be found in `paderwasn/geometry_calibration`.
+    + See `paderwasn/experiments` to run experiments.
