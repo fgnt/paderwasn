@@ -26,15 +26,11 @@ def get_doas(scenario, key='estimates'):
     assert 'observations' in scenario.keys()
     assert key in scenario['observations'].keys()
     assert ('doas' in scenario['observations'][key].keys())
-    return np.asarray(
-        scenario['observations'][key]['doas']
-    )
+    return np.asarray(scenario['observations'][key]['doas'])
 
 
 def get_sn_dists(scenario, key='estimates'):
     assert 'observations' in scenario.keys()
     assert key in scenario['observations'].keys()
     assert ('sn_distances' in scenario['observations'][key].keys())
-    return np.asarray(
-        scenario['observations'][key]['sn_distances']
-    )
+    return np.asarray(scenario['observations'][key]['sn_distances'])
