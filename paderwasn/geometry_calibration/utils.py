@@ -9,9 +9,9 @@ def est_rot_mat(pos, ref_pos, weights=None, allow_reflection=False):
     https://igl.ethz.ch/projects/ARAP/svd_rot.pdf for a detailed description.
 
     Args:
-        pos (ndarray (shape=(dim, n_pos)):
+        pos (ndarray (shape=(dim, n_pos))):
             Array containing the positions to be projected.
-        ref_pos (ndarray (shape=(dim, n_pos)):
+        ref_pos (ndarray (shape=(dim, n_pos))):
             Array containing the reference position.
         weights (ndarray):
             1D array containing the weights. If None (default) weighting
@@ -53,11 +53,11 @@ def est_translation(pos, ref_pos, rot_mat, weights=None):
     https://igl.ethz.ch/projects/ARAP/svd_rot.pdf for a detailed description.
 
     Args:
-        pos (ndarray (shape=(dim, n_pos)):
+        pos (ndarray (shape=(dim, n_pos))):
             Array containing the positions to be projected.
-        ref_pos (ndarray (shape=(dim, n_pos)):
+        ref_pos (ndarray (shape=(dim, n_pos))):
             Array containing the reference position.
-        rot_mat ((ndarray (shape=(dim, dim)):
+        rot_mat ((ndarray (shape=(dim, dim))):
             Rotation matrix needed to project pos onto ref_pos.
         weights (ndarray):
             1D array containing the weights. If None (default) weighting
@@ -87,9 +87,9 @@ def est_transl_rot(pos, ref_pos, weights=None, allow_reflection=False):
     positions pos onto the reference positions ref_pos.
 
     Args:
-        pos (ndarray (shape=(dim, n_pos)):
+        pos (ndarray (shape=(dim, n_pos))):
             Array containing the positions to be projected.
-        ref_pos (ndarray (shape=(dim, n_pos)):
+        ref_pos (ndarray (shape=(dim, n_pos))):
             Array containing the reference position.
         weights (ndarray):
             1D array containing the weights. If None (default) weighting
@@ -113,9 +113,9 @@ def map2ref(pos, ref_pos, allow_reflection=False):
     to a projection of the positions pos onto the reference positions ref_pos.
 
     Args:
-        pos (ndarray (shape=(dim, n_pos)):
+        pos (ndarray (shape=(dim, n_pos))):
             Array containing the positions to be projected.
-        ref_pos (ndarray (shape=(dim, n_pos)):
+        ref_pos (ndarray (shape=(dim, n_pos))):
             Array containing the reference position.
         allow_reflection (bool):
             If True reflections are allowed beside rotation and translation to

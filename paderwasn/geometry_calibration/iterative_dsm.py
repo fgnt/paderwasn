@@ -61,13 +61,13 @@ def src_localization(rel_src_pos, node_pos, node_orients, weights=None):
     rel_src_pos ont the reference source positions ref_pos.
 
     Args:
-        rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes)):
+        rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes))):
             Array containing the relative source positions described in the
             local coordinate systems of the sensor nodes.
-        node_pos (ndarray (shape=(2, n_nodes)):
+        node_pos (ndarray (shape=(2, n_nodes))):
             Array containing the node positions to be used for
             source localization.
-        node_orients (ndarray (shape=(2, n_nodes)):
+        node_orients (ndarray (shape=(2, n_nodes))):
             Array containing the node orientations to be used for
             source localization.
         weights:
@@ -93,21 +93,18 @@ def fit_select(rel_src_pos, node_pos, node_orients, outlier_percent, error):
     model defined by the given node positions and orientatuons.
 
     Args:
-        rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes)):
+        rel_src_pos (ndarray (shape=(2, n_srcs, n_nodes))):
             Array containing the relative source positions described in the
             local coordinate systems of the sensor nodes.
         node_pos (ndarray (shape=(2, n_nodes)):
             Array containing the node positions to be used for
             source localization.
-        node_orients (ndarray (shape=(2, n_nodes)):
+        node_orients (ndarray (shape=(2, n_nodes))):
             Array containing the node orientations to be used for
             source localization.
-        weights:
-            1D array containing the weights. If None (default) weighting
-            is omitted.
         outlier_percent (float):
             Percentage of observations to be considered as outliers.
-        error (ndarray (shape=(2, n_srcs, n_nodes)):
+        error (ndarray (shape=(2, n_srcs, n_nodes))):
             Distances between the observations after being projected and the
             common source position.
     """
@@ -135,9 +132,9 @@ def est_geometry(doas, dists, outlier_percent=.5, conv_th=1e-3, max_iter=100,
     to the EURASIP Journal on Audio, Speech, and Music Processing)
 
     Args:
-        doas (ndarray (shape=(n_srcs, n_nodes)):
+        doas (ndarray (shape=(n_srcs, n_nodes))):
             Array containing DoAs.
-        doas (ndarray (shape=(n_srcs, n_nodes)):
+        doas (ndarray (shape=(n_srcs, n_nodes))):
             Array containing source node distances.
         outlier_percent (float):
             Percentage of observations to be considered as outliers.
