@@ -23,4 +23,16 @@ $ pip install --user -e paderwasn
 ## Content
 * Geometry calibration:
     + Algorithms can be found in `paderwasn/geometry_calibration`.
+        + Geometry calibration using iterative data set matching [1]
+        + GARDE-algorithm [2]
     + See `paderwasn/experiments` to run experiments.
+    
+## References
+[1] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: Geometry Calibration in
+Wireless Acoustic Sensor Networks Utilizing DoA and Distance Information, In:
+Sub. to EURASIP Journal on Audio, Speech, and Music Processing 
+
+[2] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: Iterative Geometry
+Calibration from Distance Estimates for Wireless Acoustic Sensor Networks. In:
+Accepted for Proc. IEEEInternational Conference on Acoustics, Speech and Signal
+Processing(ICASSP) (2021). arXiv:2012.06142
