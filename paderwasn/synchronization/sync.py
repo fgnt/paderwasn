@@ -2,12 +2,45 @@ import numpy as np
 from scipy.signal.windows import hann
 
 
-def compensate_sro(sig, sro, fft_size=8192):
-    """Compensate the sampling rate offset (SRO) of the the given signal using
-    the STFT resampling method introduced in "Efficient Sampling Rate Offset
-    Compensation - An Overlap-Save Based Approach"
+def coarse_sync(sig, ref_sig, len_sync):
+    """Coarsely synchronize the given signals based on an estimate of the
+    integer offset between the signal
 
-    The function can handle constant and time-varying SROs (SRO trajectories)
+    Args:
+        sig (array-like):
+            Vector corresponding to a discrete-time signal
+        ref_sig (array-like):
+            Vector corresponding to a discrete-time reference signal
+        len_sync (int):
+            Amount of samples used for offset estimation
+    Returns:
+        sig (array-like):
+            Coarsely synchronized signal
+        ref_sig (array-like):
+            Coarsely synchronized reference signal
+        offset (int):
+            Offset between the signal and the reference signal
+    """
+    # Estimate the integer offest between the signals by searching for the time
+    # lag which maximizes the cross-correlation
+    x_corr = np.correlate(sig[:len_sync], ref_sig[:len_sync], mode='full')
+    offset = int(np.argmax(np.abs(x_corr)) - (len_sync - 1))
+
+    # Compensate the integer offset
+    if offset > 0:
+        return sig[offset:], ref_sig[:-offset], offset
+    elif offset < 0:
+        return sig[:offset], ref_sig[-offset:], offset
+    return sig, ref_sig, offset
+
+
+def compensate_sro(sig, sro, fft_size=8192):
+    """Compensate for a sampling rate offset (SRO)
+
+    The given signal will be resampled using the STFT resampling method
+    introduced in "Efficient Sampling Rate Offset Compensation -
+    An Overlap-Save Based Approach". The function can handle constant and
+    time-varying SROs (SRO trajectories).
 
     Args:
         sig (array-like):
@@ -49,15 +82,15 @@ def compensate_sro(sig, sro, fft_size=8192):
         else:
             shift_sro += sro[block_idx] * block_len / 2
 
-        # Separate the SRO- induced shift into its integer and its
-        # fractional part. The integer part is handled by a correposinding
+        # Separate the SRO-induced time shift into its integer and its
+        # fractional part. The integer part is handled by a corresponding
         # shift of the analysis window. The remaining fractional part is
         # handled by a phase shift using a multiplication with a complex valued
         # exponential function.
         integer_shift = np.round(shift_sro)
         rest_shift = integer_shift - shift_sro
 
-        # Compensate the integer part of the SRO-induced signal shift
+        # Compensate for the integer part of the SRO-induced signal shift
         block_start = int(block_idx * block_len / 2 + integer_shift)
         if block_start < 0:
             if block_start + block_len < 0:
@@ -74,7 +107,7 @@ def compensate_sro(sig, sro, fft_size=8192):
             else:
                 block = sig[block_start:block_start + block_len]
 
-        # Compensate the fractional part of the SRO-induced signal shift
+        # Compensate for the fractional part of the SRO-induced signal shift
         sig_fft = np.fft.fft(win * block, fft_size)
         sig_fft *= np.exp(-1j * 2 * np.pi * k / fft_size * rest_shift)
 
@@ -92,28 +125,3 @@ def compensate_sro(sig, sro, fft_size=8192):
         if block_end > sig.size or block_idx == max_block_idx - 1:
             return sig_resamp[:block_start+len_rest]
         block_idx += 1
-
-
-def sim_sro(sig, sro, fft_size=8192):
-    """Simulate the sampling rate offset (SRO) of the the given signal using
-    the STFT resampling method introduced in "Efficient Sampling Rate Offset
-    Compensation - An Overlap-Save Based Approach"
-
-    The function can handle constant and time-varying SROs (SRO trajectories)
-
-    Args:
-        sig (array-like):
-            Vector corresponding to the signal to be resampled
-        sro (float or array-like):
-            SRO in parts-per-million (ppm) to be simulated. If sro is a
-            scalar value it will be treated as constant SRO. Otherwise, sro
-            is interpreted as SRO trajectory corresponding to a time-varying
-            SRO.
-        fft_size (int):
-            FFT size used for calculating the STFT. The STFT uses a frame size
-            of fft_size/2 and a frame shift of fft_size/4.
-    Returns:
-        sig_resampled (numpy.ndarray):
-            Vector corresponding to the resampled signal
-    """
-    return compensate_sro(sig, -sro, fft_size)

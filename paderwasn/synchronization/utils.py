@@ -1,34 +1,6 @@
 import numpy as np
 
 
-def coarse_sync(sig, ref_sig, len_sync):
-    """Coarsely synchronize the given signals based on a crosscorrelation-based
-    offset estimate
-
-    Args:
-        sig (array-like):
-            Vector corresponding to a discrete-time signal
-        ref_sig (array-like):
-            Vector corresponding to a discrete-time reference signal
-        len_sync (int):
-            Amount of samples used for offset estimation
-    Returns:
-        sig (array-like):
-            Coarsely synchronized signal
-        ref_sig (array-like):
-            Coarsely synchronized referencesignal
-        offset (int):
-            Offset between the gnal and the reference signal
-    """
-    x_corr = np.correlate(sig[:len_sync], ref_sig[:len_sync], mode='full')
-    offset = int(np.argmax(np.abs(x_corr)) - (len_sync - 1))
-    if offset > 0:
-        return sig[offset:], ref_sig[:-offset], offset
-    elif offset < 0:
-        return sig[:offset], ref_sig[-offset:], offset
-    return sig, ref_sig, offset
-
-
 def golden_section_max_search(function, search_interval, tolerance=1e-4):
     """Search for the value that maximizes the given function f(x)
 
@@ -77,30 +49,107 @@ def golden_section_max_search(function, search_interval, tolerance=1e-4):
     return lambda_max
 
 
-def ornstein_uhlenbeck(seq_len, start_val, mean_inf, sigma_ou, theta):
-    """Discrete-time Euler-Maruyama approximation of an Ornstein-Uhlenbeck
-    process
+def ransac(observations,
+           est_params,
+           fit_select,
+           min_cardinality,
+           start_cardinality,
+           fit_level,
+           stop_cardinality,
+           max_rounds):
+    """Random sample consensus (RANSAC) for outlier rejection for parameter
+    optimization
 
     Args:
-        seq_len (int):
-            Length of the sequence to be generated using the Ornstein-Uhlenbeck
-            process
-        start_val (float):
-            Value at which the Ornstein-Uhlenbeck process starts
-        mean_inf (float):
-            Mean value reached after all transient effects have died out
-        sigma_ou (float):
-            Variance of the Gaussian distribution involved in the
-            Euler-Maruyama approximation
-        theta (float):
-            Factor specifying the convergence speed to the static mean
+        observations (array-like):
+            Vector corresponding to the observations from which the wanted
+            parameters should be estimated
+        est_params (callable):
+            Function estimating the wanted parameters (as parameter vector)
+            from the observations by minimizing a cost function
+            fun(observations) -> params
+        fit_select (callable):
+            Function to determine which observations fit to the given
+            parameter set by comparing the costs corresponding to an
+            observation for the given to a given threshold (fit_level)
+            fun(observations, params, fit_level) -> consensus
+        min_cardinality (int):
+            Minimum cardinality needed such that a consensus set is valid
+        start_cardinality (int):
+            Cardinality of the consensus after initialization
+        fit_level (float):
+            Threshold determining if an observation fits to the given
+            parameter set
+        stop_cardinality (float):
+            If the cardinality of the consensus set reaches stop_cardinality
+            the RANSAC will stop
+        max_rounds (int):
+            Maximum amount of RANSAC rounds
     Returns:
-        x (numpy.ndarray):
-            Vector corresponing to a realization of the random process
+        A vector corresponding to the estimate of the wanted parameter set
     """
-    x = np.zeros(seq_len)
-    x[0] = start_val
-    for i in range(1, seq_len):
-        x[i] = (1 - theta)  * x[i - 1]
-        x[i] += theta * mean_inf + sigma_ou * np.random.normal()
-    return x
+    # The RANSAC method will stop if stop_cardinality percent of the
+    # observation fit to the current parameter estimate
+    n_obs = len(observations)
+    stop_cardinality = int(stop_cardinality * n_obs)
+
+    # The cardinality of a concsnensus set must be larger than cardinality
+    # threshold so that it is considered as valid consensus set. After
+    # initialization this threshold is set to min_cardinality. After updating
+    # the consensus set the threshold corresponds to the cardinality of the
+    # current consensus set.
+    cardinality_threshold = min_cardinality
+
+    # Randomly initialize the consensus set
+    consensus = np.zeros(n_obs, dtype=bool)
+    init_consensus = np.random.choice(
+        np.arange(n_obs), start_cardinality, False
+    )
+    consensus[init_consensus] = 1
+
+    n_rounds = 0
+    largest_consensus = np.zeros(n_obs)
+    while True:
+        # Estimate the wanted parameters from the observations currently
+        # belonging to the consensus set. Create a new consensus set containing
+        # all observations which are considered to fit to the parameter
+        # estimate.
+        params = est_params(observations[consensus])
+        new_consensus = fit_select(observations, params, fit_level)
+
+        if np.sum(new_consensus) > cardinality_threshold:
+            # If the cardinality of the new consensus set is larger than the
+            # cardinality of the current consensus set the new consensus set
+            # will be used to estimate the parameters in the next round of the
+            # RANSAC method. Furthermore, the cardinality of the new consensus
+            # set will be used as threshold for the cardinality in the next
+            # round of the RANSAC method.
+            consensus = new_consensus.copy()
+            cardinality_threshold = np.sum(new_consensus)
+        else:
+            # If the cardinality of the new consensus set is not larger than
+            # the cardinality of the current consensus set the RANSAC will
+            # either stop or the next round of the RANSAC will be started.
+            if np.sum(consensus) > np.sum(largest_consensus):
+                # If the cardinality of the current consensus set is larger
+                # than the cardinality of the currently largest consensus set
+                # the current consensus set will be kept.
+                largest_consensus = consensus.copy()
+            if (cardinality_threshold >= stop_cardinality
+                    or n_rounds == max_rounds):
+                # Stop the RANSAC if the maximum number of RANSAC rounds is
+                # reached or the cardinality of the consensus set fullfills the
+                # stopping criterion.
+                break
+            else:
+                # If none of the stopping criteria is met the consensus set is
+                # randomly initialized again and the next RANSAC round is
+                # started.
+                n_rounds += 1
+                cardinality_threshold = min_cardinality
+                consensus = np.zeros(n_obs, dtype=bool)
+                init_consensus = np.random.choice(
+                    np.arange(n_obs), start_cardinality, False
+                )
+                consensus[init_consensus] = 1
+    return est_params(observations[largest_consensus])

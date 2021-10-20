@@ -1,7 +1,7 @@
 import numpy as np
 from paderbox.transform import STFT
 
-from paderwasn.synchronization.utils import golden_section_max_search
+from paderwasn.synchronization.time_shift_estimation import max_time_lag_search
 
 
 class OnlineWACD:
@@ -36,7 +36,7 @@ class OnlineWACD:
                 Frame size / FFT size used for the Welch method utilized for
                 PSD estimation
             temp_dist (int):
-                Number of samples between the two consecutive coherence
+                Amount of samples between the two consecutive coherence
                 functions
             eps_max (float):
                 Maximum expected SRO in parts-per-million (ppm)
@@ -85,10 +85,10 @@ class OnlineWACD:
         channel reference signal ref_sig
 
         Args:
-            sig (array_like):
+            sig (array-like):
                 Vector corresponding to the signal whose SRO should be
                 estimated
-            ref_sig (array_like):
+            ref_sig (array-like):
                 Vector corresponding to the reference signal (Should have the
                 same length as sig)
 
@@ -124,7 +124,7 @@ class OnlineWACD:
         k = np.arange(self.k_min, self.k_max)
         # Estimate the SRO segment-wisely every seg_shift samples
         for seg_idx in range(num_segments):
-            #  Estimate of the SRO-induced integer shift to be compensated
+            #  Estimate of the SRO-induced integer time shift to be compensated
             shift = int(np.round(tau_sro))
 
             # Calculate the coherence Gamma(seg_idx*seg_shift,k). Note that
@@ -175,9 +175,9 @@ class OnlineWACD:
             sro_estimates[seg_idx] = sro_est
 
             # Use the current SRO estimate to update the estimate for the
-            # SRO-induced signal shift (The SRO-induced shift corresponds to
-            # the average shift of the segment w.r.t. the center of the
-            # segment).
+            # SRO-induced time shift between the signal and the reference
+            # signal(The SRO-induced shift corresponds to the average shift of
+            # the segment w.r.t. the center of the segment).
             if seg_idx == 0:
                 # The center of the first segment is given by
                 # (seg_len / 2 + temp_dist).
@@ -201,10 +201,10 @@ class OnlineWACD:
         signal segments using a Welch method
         
         Args:
-            seg_i (array like):
+            seg_i (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from the i-th signal
-            seg_j (array like):
+            seg_j (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from the j-th signal
         Returns:
@@ -218,20 +218,20 @@ class OnlineWACD:
         """Estimate the coherence from the given signal segments
 
         Args:
-            seg (array like):
+            seg (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from signal whose SRO should be estimated
-            seg_ref (array like):
+            seg_ref (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from the reference signal
         Returns:
             gamma (numpy.ndarray):
                 Coherence of the signal and the reference signal
         """
-        xpsd = self.calc_psd(seg_ref, seg)
+        cpsd = self.calc_psd(seg_ref, seg)
         psd_ref_sig = self.calc_psd(seg_ref, seg_ref)
         psd_sig = self.calc_psd(seg, seg)
-        gamma = xpsd / (np.sqrt(psd_ref_sig * psd_sig) + 1e-13)
+        gamma = cpsd / (np.sqrt(psd_ref_sig * psd_sig) + 1e-13)
         return gamma
 
 
@@ -249,7 +249,7 @@ class DynamicWACD:
 
         Sampling rate offset (SRO) estimator for dynamic scenarios with
         time-varying SROs and position changes of the acoustic source from
-        "On Synchronization of Wireless Acoustic Sensor Networks  in the
+        "On Synchronization of Wireless Acoustic Sensor Networks in the
         presence of Time-Varying Sampling Rate Offsets and Speaker Changes"
         (Note that moving sources cannot be handled)
 
@@ -268,7 +268,7 @@ class DynamicWACD:
                 Frame size / FFT size used for the Welch method utilized for
                 PSD estimation
             temp_dist (int):
-                Number of samples between the two consecutive coherence
+                Amount of samples between the two consecutive coherence
                 functions
             alpha (float):
                 Smoothing factor used for the autoregressive smoothing for time
@@ -297,16 +297,16 @@ class DynamicWACD:
         channel reference signal ref_sig
 
         Args:
-            sig (array_like):
+            sig (array-like):
                 Vector corresponding to the signal whose SRO should be
                 estimated
-            ref_sig (array_like):
+            ref_sig (array-like):
                 Vector corresponding to the reference signal (Should have the
                 same length as sig)
-            activity_sig(array_like):
+            activity_sig(array-like):
                 Vector containing the sample-wise information of source
                 activity in the signal sig
-            activity_ref_sig(array_like):
+            activity_ref_sig(array-like):
                 Vector containing the sample-wise information of source
                 activity in the reference signal ref_sig
         Returns:
@@ -383,7 +383,7 @@ class DynamicWACD:
 
                 # Note that the used STFT exploits the symmetry of the FFT of
                 # real valued input signals and computes only the non-negative
-                # frequency terms. Therefore, the non-negative frequency terms
+                # frequency terms. Therefore, the negative frequency terms
                 # have to be added.
                 coherence_product = np.concatenate(
                     [coherence_product[:-1],
@@ -398,16 +398,16 @@ class DynamicWACD:
                 # Interpret the coherence product as generalized cross power
                 # spectral density, use an efficient golden section search
                 # to find the time lag which maximizes the corresponding
-                # generalized cross correlation, and derive the SRO from the
+                # generalized cross correlation and derive the SRO from the
                 # time lag.
-                sro_est = - self.max_search(avg_coh_prod) / self.temp_dist
+                sro_est = - max_time_lag_search(avg_coh_prod) / self.temp_dist
             if seg_idx > self.settling_time - 1:
                 sro_estimates[seg_idx] = sro_est
             if seg_idx == self.settling_time - 1:
                 sro_estimates[:seg_idx + 1] = sro_est
 
             # Use the current SRO estimate to update the estimate for the
-            # SRO-induced signal shift (The SRO-induced shift corresponds to
+            # SRO-induced time shift (The SRO-induced shift corresponds to
             # the average shift of the segment w.r.t. the center of the
             # segment).
             if seg_idx == self.settling_time - 1:
@@ -430,57 +430,15 @@ class DynamicWACD:
                 return sro_estimates[:seg_idx + 1] * 1e6
         return sro_estimates * 1e6
 
-    def max_search(self, gcpsd):
-        """Search for the time lag which maximized the generalized cross
-        correlation (GCC) corresponding to the given generalized cross power
-        spectral density (GCPSD)
-
-        Args:
-            gcpsd(array_like):
-                Vector corresponding to a GCPSD
-        Returns:
-            lambda_max (float):
-                Time lag which maximizes the GCC function
-        """
-        def _eval_gcc(gcpsd, lag):
-            """Evaluate the GCC corresponding to the given GCPSD at the given
-            non-integer time lag
-
-            Args:
-                gcpsd (array-like):
-                    Vector corresponding to the GCPSD
-                lag (float):
-                    Non-integer time lag for which the GCC function has to
-                    be evaluated
-            Returns:
-                gcc (float):
-                    Value of the GCC function at the given time lag
-            """
-            gcpsd = np.asarray(gcpsd)
-            fft_size = len(gcpsd)
-            k = np.fft.fftshift(
-                np.arange(-fft_size // 2, fft_size // 2))
-            pre_factor = 1j * 2 * np.pi / fft_size * k
-            gcc = np.abs(np.sum(gcpsd * np.exp(pre_factor * lag)))
-            return gcc
-
-        gcc = np.fft.ifftshift(np.real(np.fft.ifft(gcpsd)))
-        lambda_max = np.argmax(gcc) - self.fft_size // 2
-        search_interval = (lambda_max - .5, lambda_max + .5)
-        lambda_max = golden_section_max_search(
-            lambda x: _eval_gcc(gcpsd, x), search_interval
-        )
-        return lambda_max
-
     def calc_psd(self, seg_i, seg_j, sro=0.):
         """Estimate the (cross) power spectral density (PSD) from the given
         signal segments using a Welch method
 
         Args:
-            seg_i (array like):
+            seg_i (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from the i-th signal
-            seg_j (array like):
+            seg_j (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from the j-th signal
             sro (float):
@@ -500,10 +458,10 @@ class DynamicWACD:
         """Estimate the coherence from the given signal segments
 
         Args:
-            seg (array like):
+            seg (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from signal whose SRO should be estimated
-            seg_ref (array like):
+            seg_ref (array-like):
                 Vector with seg_len elements corresponding to the segment taken
                 from the reference signal
             sro (float):
@@ -513,8 +471,8 @@ class DynamicWACD:
             gamma (numpy.ndarray):
                 Coherence of the signal and the reference signal
         """
-        xpsd = self.calc_psd(seg_ref, seg, sro)
+        cpsd = self.calc_psd(seg_ref, seg, sro)
         psd_ref_sig = self.calc_psd(seg_ref, seg_ref)
         psd_sig = self.calc_psd(seg, seg)
-        gamma = xpsd / (np.sqrt(psd_ref_sig * psd_sig) + 1e-13)
+        gamma = cpsd / (np.sqrt(psd_ref_sig * psd_sig) + 1e-13)
         return gamma
