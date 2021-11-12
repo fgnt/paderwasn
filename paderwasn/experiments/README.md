@@ -18,12 +18,12 @@ $ python -m paderwasn.experiments.calibration_method with 'garde'
 ``` 
 
 ## References
-[1] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: Geometry Calibration in
-Wireless Acoustic Sensor Networks Utilizing DoA and Distance Information, In:
-Sub. to EURASIP Journal on Audio, Speech, and Music Processing 
+[1] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: "Geometry Calibration in
+Wireless Acoustic Sensor Networks Utilizing DoA and Distance Information", 
+EURASIP Journal on Audio, Speech, and Music Processing, vol. 2021, no. 1,
+pp. 1–17, 2021.
 
-[2] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: Iterative Geometry
-Calibration from Distance Estimates for Wireless Acoustic Sensor Networks. In:
-Sub. to Proc. IEEEInternational Conference on Acoustics, Speech and Signal
-Processing(ICASSP) (2021). arXiv:2012.06142
-
+[2] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: "Iterative Geometry
+Calibration from Distance Estimates for Wireless Acoustic Sensor Networks". in
+Proc. IEEE International Conference on Acoustics, Speech and Signal Processing
+(ICASSP), 2021, pp. 741-745.
