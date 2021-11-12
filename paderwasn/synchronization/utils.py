@@ -1,4 +1,5 @@
 import numpy as np
+from paderbox.array import segment_axis
 
 
 def golden_section_max_search(function, search_interval, tolerance=1e-4):
@@ -93,7 +94,7 @@ def ransac(observations,
     n_obs = len(observations)
     stop_cardinality = int(stop_cardinality * n_obs)
 
-    # The cardinality of a concsnensus set must be larger than cardinality
+    # The cardinality of a consensus set must be larger than cardinality
     # threshold so that it is considered as valid consensus set. After
     # initialization this threshold is set to min_cardinality. After updating
     # the consensus set the threshold corresponds to the cardinality of the
@@ -153,3 +154,69 @@ def ransac(observations,
                 )
                 consensus[init_consensus] = 1
     return est_params(observations[largest_consensus])
+
+
+class VoiceActivityDetector:
+    """An energy-based voice activity detector"""
+    def __init__(self,
+                 threshold,
+                 frame_size=1024,
+                 frame_shift=256,
+                 len_smooth_win=49):
+        """
+        Args:
+            threshold:
+                Threshold for the energy needed so that speech is considered
+                to be active in a frame
+            frame_size:
+                Size of the frames used for energy estimation
+            frame_shift:
+                Shift of the frames used for energy estimation
+            len_smooth_win:
+
+        Returns:
+            Vector representing speech activity with 1 indicating
+            that speech is active
+        """
+        self.threshold = threshold
+        self.frame_size = frame_size
+        self.frame_shift = frame_shift
+        self.len_smooth_win = len_smooth_win
+
+    def __call__(self, sig):
+        energy = np.sum(
+            segment_axis(sig, self.frame_size, self.frame_shift) ** 2, axis=-1
+        )
+        activity = energy >= self.threshold
+        activity = self.activity_frame_to_time(activity)
+        if self.len_smooth_win != 0:
+            activity = self.smooth_voice_activity(activity)
+        return activity
+
+    def activity_frame_to_time(self, frame_wise_activity):
+        frame_wise_activity = np.asarray(frame_wise_activity)
+        frame_wise_activity = np.broadcast_to(
+            frame_wise_activity[..., None],
+            (*frame_wise_activity.shape, self.frame_size)
+        )
+        len_time_sig = (frame_wise_activity.shape[-2] * self.frame_shift
+                        + self.frame_size - self.frame_shift)
+        time_activity = \
+            np.zeros((*frame_wise_activity.shape[:-2], len_time_sig))
+        time_signal_seg = segment_axis(
+            time_activity, self.frame_size, self.frame_shift, end=None
+        )
+        time_signal_seg[frame_wise_activity > 0] = 1
+        return time_activity != 0
+
+    def smooth_voice_activity(self, activity):
+        activity = activity.copy()
+        shift = self.len_smooth_win // 2
+        padding = [(0, 0)] * (activity.ndim - 1) + [(shift, shift)]
+        vad_padded = np.pad(activity, padding, 'edge')
+        vad_segmented = \
+            segment_axis(vad_padded, self.len_smooth_win, 1, end='pad')
+        vad_segmented = np.sum(vad_segmented, axis=-1)
+        activity[vad_segmented >= shift] = 1
+        activity[vad_segmented < shift] = 0
+        return activity
