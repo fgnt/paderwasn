@@ -89,5 +89,5 @@ def est_sto(sig_shifts,
     dists_ref = np.asarray(dists_ref)
 
     tdofs = (dists - dists_ref) / sound_velocity * sampling_rate
-    sto = ransac_sto_est(sig_shifts - tdofs, _solve_ls_problem, _fit_select)
+    sto = ransac_sto_est(tdofs - sig_shifts, _solve_ls_problem, _fit_select)
     return sto
