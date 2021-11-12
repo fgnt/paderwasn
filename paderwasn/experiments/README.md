@@ -25,6 +25,7 @@ All experiments are done on the ansynchronous WASN database used in [3] (see [3]
 | Scenario-2  | X | | |
 | Scenario-3  | X | X | X |
 | Scenario-4  | X | X | |
+
 To select Scenario-x, with x from {1, 2, 3, 4}, for the experiments append
 ``` 'scenario="Scenario-x"' ``` to the end of the commands mentioned below.
 
