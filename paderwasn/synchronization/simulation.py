@@ -32,7 +32,7 @@ def ornstein_uhlenbeck(seq_len, start_val, mean_inf, sigma, theta):
     x = np.zeros(seq_len)
     x[0] = start_val
     for i in range(1, seq_len):
-        x[i] = (1 - theta)  * x[i - 1]
+        x[i] = (1 - theta) * x[i - 1]
         x[i] += theta * mean_inf + sigma * np.random.normal()
     return x
 
