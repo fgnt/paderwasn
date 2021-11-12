@@ -37,7 +37,7 @@ $ pip install --user -e paderwasn
         asynchronous WASN. This database corresponds to the database (after
         minimal adjustments) used in [3] for evaluation of signal
         synchronization algorithms. 
-* Experiments using the provided algorithms:
+* Experiments using the provided algorithms and databases:
     + [Comparision of geometry calibration methods](paderwasn/experiments/calibration_methods.py)
     + [Comparision of SRO methods](paderwasn/experiments/sro_estimation_methods.py)
     + [STO estimation](paderwasn/experiments/sto_estimation.py)
