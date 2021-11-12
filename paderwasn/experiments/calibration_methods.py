@@ -6,8 +6,8 @@ import numpy as np
 from sacred import Experiment
 from time import time
 from paderbox.math.directional import wrap
-from paderwasn.database.calibration_set import CalibrationDataSet
-from paderwasn.database.utils import get_node_positions, \
+from paderwasn.databases.geometry_calibration.database import CalibrationDataSet
+from paderwasn.databases.geometry_calibration.utils import get_node_positions, \
     get_node_orientations, get_doas, get_sn_dists
 from paderwasn.geometry_calibration.garde import est_geometry as calib_garde
 from paderwasn.geometry_calibration.iterative_dsm import \
