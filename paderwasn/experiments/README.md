@@ -19,7 +19,7 @@ $ python -m paderwasn.experiments.calibration_methods with 'garde'
 ## Signal Synchronization
 All experiments are done on the ansynchronous WASN database used in [3] (see [3] for more details):
 
-| Scenario | time-varying SRO | Multiple Source Positions | Speech Pauses |
+| Scenario | Time-varying SRO | Multiple Source Positions | Speech Pauses |
 | :-----------: | :-----------: |  :-----------: |  :-----------: |
 | Scenario-1  | | | |
 | Scenario-2  | X | | |
