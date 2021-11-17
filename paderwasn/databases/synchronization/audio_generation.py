@@ -83,11 +83,11 @@ def generate_audio(example,
             reverberant_audio
 
     audio_data = audio_data[:, stos[node_id]:]
-    audio_data += np.random.normal(0, std_sensor_noise, size=audio_data.shape)
     sro = example['sro'][node_id]
     if isinstance(sro, str):
         sro = load_binary(sro)
     audio_data = np.asarray([sim_sro(ch, sro) for ch in audio_data])
+    audio_data += np.random.normal(0, std_sensor_noise, size=audio_data.shape)
 
     if sig_len is not None:
         audio_data = audio_data[:, :sig_len]
