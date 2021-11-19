@@ -3,7 +3,7 @@ from pathlib import Path
 from paderbox.io import dump_audio, dump_json, load_json
 from sacred import Experiment
 from tqdm.auto import tqdm
-from paderwasn.databases.synchronization.database import AsnycWASN
+from paderwasn.databases.synchronization.database import AsyncWASN
 from paderwasn.databases.synchronization.audio_generation import generate_audio
 
 ex = Experiment()
@@ -35,7 +35,7 @@ def generate_file_db(json_path, json_file_db_path, data_root):
 
     db = load_json(json_path)
     data_root = Path(data_root)
-    async_wasn = AsnycWASN(json_path)
+    async_wasn = AsyncWASN(json_path)
     for scenario in range(1, 5):
         examples = async_wasn.get_dataset(f'scenario_{scenario}')
         examples = examples.map(generate_audio_all_nodes)

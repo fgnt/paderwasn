@@ -1,7 +1,7 @@
 from lazy_dataset.database import JsonDatabase
 
 
-class AsnycWASN(JsonDatabase):
+class AsyncWASN(JsonDatabase):
     def __init__(self, json_path):
         super().__init__(json_path)
 

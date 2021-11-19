@@ -7,7 +7,7 @@ from paderbox.array import segment_axis
 from paderbox.io import load_audio
 from sacred import Experiment
 
-from paderwasn.databases.synchronization.database import AsnycWASN
+from paderwasn.databases.synchronization.database import AsyncWASN
 from paderwasn.synchronization.sro_estimation import OnlineWACD, DynamicWACD
 from paderwasn.synchronization.sync import coarse_sync, compensate_sro
 from paderwasn.synchronization.sto_estimation import est_sto
@@ -58,13 +58,13 @@ def eval_estimator(db_json,
     assert scenario in scenarios, msg
 
     if scenario == 'Scenario-1':
-        db = AsnycWASN(db_json).get_data_set_scenario_1()
+        db = AsyncWASN(db_json).get_data_set_scenario_1()
     elif scenario == 'Scenario-2':
-        db = AsnycWASN(db_json).get_data_set_scenario_2()
+        db = AsyncWASN(db_json).get_data_set_scenario_2()
     elif scenario == 'Scenario-3':
-        db = AsnycWASN(db_json).get_data_set_scenario_3()
+        db = AsyncWASN(db_json).get_data_set_scenario_3()
     elif scenario == 'Scenario-4':
-        db = AsnycWASN(db_json).get_data_set_scenario_4()
+        db = AsyncWASN(db_json).get_data_set_scenario_4()
 
     sro_estimator = DynamicWACD()
     voice_activity_detector = VoiceActivityDetector(vad_threshold)
