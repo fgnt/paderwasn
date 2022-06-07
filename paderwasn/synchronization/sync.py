@@ -63,7 +63,6 @@ def compensate_sro(sig, sro, fft_size=8192):
     else:
         max_block_idx = 0
 
-    sro *= 1e-6
     k = np.fft.fftshift(np.arange(-fft_size / 2, fft_size / 2))
     block_len = int(fft_size // 2)
     sig_resamp = np.zeros_like(sig)
@@ -78,9 +77,10 @@ def compensate_sro(sig, sro, fft_size=8192):
         # Accumulate the SRO-induced signal shifts (The shifts correspond to
         # the average shift within the block)
         if np.isscalar(sro):
-            shift_sro = sro * (block_idx * block_len / 2 + block_len / 2)
+            shift_sro = \
+                sro * 1e-6 * (block_idx * block_len / 2 + block_len / 2)
         else:
-            shift_sro += sro[block_idx] * block_len / 2
+            shift_sro += sro[block_idx] * 1e-6 * block_len / 2
 
         # Separate the SRO-induced time shift into its integer and its
         # fractional part. The integer part is handled by a corresponding
