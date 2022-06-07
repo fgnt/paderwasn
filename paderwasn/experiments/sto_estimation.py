@@ -8,7 +8,7 @@ from paderbox.io import load_audio
 from sacred import Experiment
 
 from paderwasn.databases.synchronization.database import AsyncWASN
-from paderwasn.synchronization.sro_estimation import OnlineWACD, DynamicWACD
+from paderwasn.synchronization.sro_estimation import DynamicWACD
 from paderwasn.synchronization.sync import coarse_sync, compensate_sro
 from paderwasn.synchronization.sto_estimation import est_sto
 from paderwasn.synchronization.time_shift_estimation import est_time_shift
