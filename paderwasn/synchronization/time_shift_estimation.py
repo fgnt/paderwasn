@@ -34,8 +34,7 @@ def max_time_lag_search(gcpsd):
         """
         gcpsd = np.asarray(gcpsd)
         fft_size = len(gcpsd)
-        k = np.fft.fftshift(
-            np.arange(-fft_size // 2, fft_size // 2))
+        k = np.fft.fftshift(np.arange(-fft_size // 2, fft_size // 2))
         pre_factor = 1j * 2 * np.pi / fft_size * k
         gcc = np.abs(np.sum(gcpsd * np.exp(pre_factor * lag)))
         return gcc
