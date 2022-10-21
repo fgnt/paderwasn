@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.signal.windows import blackman
 from paderbox.array.segment import segment_axis
 
 
@@ -86,9 +87,11 @@ def est_time_shift(sig, ref_sig, seg_size, seg_shift):
         gcpsd = cpsd / (np.abs(fft_seg) * np.abs(fft_ref_seg) + 1e-18)
         return gcpsd
 
+    win = blackman(seg_size + 1)[:-1]
     segments = segment_axis(sig, seg_size, seg_shift, end='cut')
     segments_ref = segment_axis(ref_sig, seg_size, seg_shift, end='cut')
     shifts = np.zeros(len(segments))
     for seg_idx, (seg, ref_seg) in enumerate(zip(segments, segments_ref)):
-        shifts[seg_idx] = max_time_lag_search(_get_gcpsd(seg, ref_seg))
+        shifts[seg_idx] = \
+            max_time_lag_search(_get_gcpsd(seg * win, ref_seg * win))
     return shifts
