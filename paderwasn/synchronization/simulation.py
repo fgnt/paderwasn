@@ -3,7 +3,9 @@ import numpy as np
 from paderwasn.synchronization.sync import compensate_sro
 
 
-def ornstein_uhlenbeck(seq_len, start_val, mean_inf, sigma, theta):
+def ornstein_uhlenbeck(
+        seq_len, start_val, mean_inf, sigma, theta, rng=np.random
+):
     """Discrete-time Euler-Maruyama approximation of an Ornstein-Uhlenbeck
     process
 
@@ -25,6 +27,8 @@ def ornstein_uhlenbeck(seq_len, start_val, mean_inf, sigma, theta):
             Euler-Maruyama approximation
         theta (float):
             Factor specifying the convergence speed to the static mean
+        rng:
+            A random number generator object
     Returns:
         x (numpy.ndarray):
             Vector corresponding to a realization of the random process
@@ -33,7 +37,7 @@ def ornstein_uhlenbeck(seq_len, start_val, mean_inf, sigma, theta):
     x[0] = start_val
     for i in range(1, seq_len):
         x[i] = (1 - theta) * x[i - 1]
-        x[i] += theta * mean_inf + sigma * np.random.normal()
+        x[i] += theta * mean_inf + sigma * rng.normal()
     return x
 
 
