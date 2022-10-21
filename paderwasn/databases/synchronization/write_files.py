@@ -19,7 +19,7 @@ def config():
     assert data_root is not None, msg
     json_file_db_path = None
     msg = ('You have to define the path where the'
-           'database json (with written files)is stored.')
+           'database json (with written files) is stored.')
     assert json_file_db_path is not None, msg
 
 
