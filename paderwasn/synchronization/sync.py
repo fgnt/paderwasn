@@ -121,7 +121,7 @@ def compensate_sro(sig, sro, fft_size=8192):
 
         # Stop resampling if the end of the signal or the sro trajectory
         # is reached
-        block_end = int(block_idx * block_len / 2 - integer_shift) + block_len
+        block_end = block_start + block_len
         if block_end > sig.size or block_idx == max_block_idx - 1:
             return sig_resamp[:block_start+len_rest]
         block_idx += 1
