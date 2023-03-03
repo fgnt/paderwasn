@@ -20,6 +20,8 @@ $ pip install --user -e paderwasn
 
 ## Content
 * Algorithms:
+    + Source separation in ad-hoc acoustic sensor networks via beamforming 
+        + Will be added soon
     + [Geometry calibration](paderwasn/geometry_calibration):
         + Geometry calibration using iterative data set matching [1]
         + GARDE-algorithm [2]
@@ -30,6 +32,7 @@ $ pip install --user -e paderwasn
         + Sampling time offset (STO) estimation [3]
         + Resampling to compensate for an SRO
         + Simulation of a (time-varying) SRO [3]
+    
 * Databases:
     + [Geometry calibration observations](paderwasn/databases/geometry_calibration): Collection of direction-of-arrival (DoA) and source-node distance
         estimates used for geometry calibration in [1]
