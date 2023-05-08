@@ -30,8 +30,8 @@ $ pip install --user -e paderwasn
         + Sampling time offset (STO) estimation [3]
         + Resampling to compensate for an SRO
         + Simulation of a (time-varying) SRO [3]
-    + [Source extraction in ad-hoc acoustic sensor networks via beamforming](paderwasn/source_extraction):
-        + Integrated sampling rate synchronization and acoustic beamforming [5]
+    + Source extraction in ad-hoc acoustic sensor networks via beamforming:
+        + Integrated sampling rate synchronization and acoustic beamforming [5] (will be added soon)
     
 * Databases:
     + [Geometry calibration observations](paderwasn/databases/geometry_calibration): Collection of direction-of-arrival (DoA) and source-node distance
