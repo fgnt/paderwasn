@@ -20,8 +20,6 @@ $ pip install --user -e paderwasn
 
 ## Content
 * Algorithms:
-    + Source separation in ad-hoc acoustic sensor networks via beamforming 
-        + Will be added soon
     + [Geometry calibration](paderwasn/geometry_calibration):
         + Geometry calibration using iterative data set matching [1]
         + GARDE-algorithm [2]
@@ -32,6 +30,8 @@ $ pip install --user -e paderwasn
         + Sampling time offset (STO) estimation [3]
         + Resampling to compensate for an SRO
         + Simulation of a (time-varying) SRO [3]
+    + [Source extraction in ad-hoc acoustic sensor networks via beamforming](paderwasn/source_extraction):
+        + Integrated sampling rate synchronization and acoustic beamforming [5]
     
 * Databases:
     + [Geometry calibration observations](paderwasn/databases/geometry_calibration): Collection of direction-of-arrival (DoA) and source-node distance
@@ -97,14 +97,18 @@ Proc. IEEE International Conference on Acoustics, Speech and Signal Processing
 
 [3] Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.: "On Synchronization of
 Wireless Acoustic Sensor Networks in the Presence of Time-varying Sampling Rate
-Offsets and Speaker Changes". Submitted to IEEE International Conference on
-Acoustics, Speech and Signal Processing (ICASSP), 2022, arXiv preprint
-arXiv:2110.12820.
+Offsets and Speaker Changes," in Proc. IEEE International Conference on
+Acoustics, Speech and Signal Processing (ICASSP), 2022.
 
 [4] Chinaev, A., Enzner, G., Gburrek, T., Schmalenstroeer, J.:
 “Online Estimation of Sampling Rate Offsets in Wireless Acoustic Sensor
 Networks with Packet Loss,” in Proc. 29th European Signal Processing Conference
 (EUSIPCO), 2021, pp. 1–5.
+
+[5]  Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.:
+“Online Estimation of Sampling Rate Offsets in Wireless Acoustic Sensor
+Networks with Packet Loss”. Submitted to European Signal Processing Conference
+(EUSIPCO), 2023.
 
 ## Citation
 If you are using the code or one of the provided databases please cite the
@@ -122,7 +126,7 @@ corresponding paper (If you use the asynchronous WASN database please cite [3]):
 }
 ```
  ```
-@inproceedings{gburrek2021synchronization, 
+@inproceedings{gburrek2021garde, 
     author={Gburrek, Tobias and Schmalenstroeer, Joerg and Haeb-Umbach, Reinhold}, 
     booktitle={IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
     title={Iterative Geometry Calibration from Distance Estimates for Wireless Acoustic Sensor Networks},
@@ -132,13 +136,15 @@ corresponding paper (If you use the asynchronous WASN database please cite [3]):
 }
 ```
  ```
-@misc{gburrek2021synchronization,
-      title={On Synchronization of Wireless Acoustic Sensor Networks in the Presence of Time-varying Sampling Rate Offsets and Speaker Changes}, 
-      author={Gburrek, Tobias and Schmalenstroeer, Joerg and Haeb-Umbach, Reinhold},
-      year={2021},
-      eprint={2110.12820},
-      archivePrefix={arXiv},
-      primaryClass={eess.AS}
+@inproceedings{gburrek2022,
+    author={Gburrek, Tobias and Schmalenstroeer, Joerg and Haeb-Umbach, Reinhold},
+    booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+    title={On Synchronization of Wireless Acoustic Sensor Networks in the Presence of Time-Varying Sampling Rate Offsets and Speaker Changes}, 
+    year={2022},
+    volume={},
+    number={},
+    pages={916-920},
+    doi={10.1109/ICASSP43922.2022.9746284}
 }
 ```
  ```
@@ -148,6 +154,16 @@ corresponding paper (If you use the asynchronous WASN database please cite [3]):
 	pages = {1--5},
 	title = {{Online Estimation of Sampling Rate Offsets in Wireless Acoustic Sensor Networks with Packet Loss}},
 	year = {2021},
+}
+ ```
+
+ ```
+@inproceedings{Gburrek23,
+    author={Gburrek, Tobias and Schmalenstroeer, Joerg and Haeb-Umbach, Reinhold},
+	booktitle = {Submitted to European Signal Processing Conference (EUSIPCO)},
+	pages = {1--5},
+	title = {{On the Integration of Sampling Rate Synchronization and Acoustic Beamforming}},
+	year = {2023},
 }
  ```
 
