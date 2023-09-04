@@ -328,6 +328,7 @@ class DynamicWACD:
         tau_sro = 0
 
         sro_est = 0
+        activity_cnt = 0
         # Estimate the SRO segment-wisely every seg_shift samples
         for seg_idx in range(num_segments):
             # Estimate of the SRO-induced integer shift to be compensated
@@ -401,9 +402,10 @@ class DynamicWACD:
                 # generalized cross correlation and derive the SRO from the
                 # time lag.
                 sro_est = - max_time_lag_search(avg_coh_prod) / self.temp_dist
-            if seg_idx > self.settling_time - 1:
+                activity_cnt += 1
+            if activity_cnt > self.settling_time:
                 sro_estimates[seg_idx] = sro_est
-            if seg_idx == self.settling_time - 1:
+            if activity_cnt == self.settling_time:
                 sro_estimates[:seg_idx + 1] = sro_est
 
             # Use the current SRO estimate to update the estimate for the
