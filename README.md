@@ -30,8 +30,8 @@ $ pip install --user -e paderwasn
         + Sampling time offset (STO) estimation [3]
         + Resampling to compensate for an SRO
         + Simulation of a (time-varying) SRO [3]
-    + Source extraction in ad-hoc acoustic sensor networks via beamforming:
-        + Integrated sampling rate synchronization and acoustic beamforming [5] (will be added soon)
+    + [Source extraction in ad-hoc acoustic sensor networks via beamforming](paderwasn/source_extraction):
+        + Integrated sampling rate synchronization and acoustic beamforming [5]
     
 * Databases:
     + [Geometry calibration observations](paderwasn/databases/geometry_calibration): Collection of direction-of-arrival (DoA) and source-node distance
@@ -75,7 +75,6 @@ and simulation descriptions:
 1. Create a json-file for the database:
     ```bash 
     $ python -m paderwasn.databases.synchronization.create_json with 'database_path="/PATH/TO/THE/DATABASE/"' 'librispeech_path="/PATH/TO/THE/ROOT/OF/LIBRISPEECH/"' 'json_path="/PATH/WHERE/TO/STORE/THE/DB_JSON/"'
-
     ```
 1. Create a file-based version of the database, i.e. simulate the audio signals,
     store the audio signals on the disk and create a new json-file for the
@@ -107,7 +106,7 @@ Networks with Packet Loss,” in Proc. 29th European Signal Processing Conferenc
 
 [5]  Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.:
 “Online Estimation of Sampling Rate Offsets in Wireless Acoustic Sensor
-Networks with Packet Loss”. Submitted to European Signal Processing Conference
+Networks with Packet Loss”. in Proc. European Signal Processing Conference
 (EUSIPCO), 2023.
 
 ## Citation
@@ -160,7 +159,7 @@ corresponding paper (If you use the asynchronous WASN database please cite [3]):
  ```
 @inproceedings{Gburrek23,
     author={Gburrek, Tobias and Schmalenstroeer, Joerg and Haeb-Umbach, Reinhold},
-	booktitle = {Submitted to European Signal Processing Conference (EUSIPCO)},
+	booktitle = {31st European Signal Processing Conference (EUSIPCO)},
 	pages = {1--5},
 	title = {{On the Integration of Sampling Rate Synchronization and Acoustic Beamforming}},
 	year = {2023},
