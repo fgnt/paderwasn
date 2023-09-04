@@ -57,6 +57,17 @@ def compensate_sro(sig, sro, fft_size=8192):
         sig_resampled (numpy.ndarray):
             Vector corresponding to the resampled signal
     """
+    reps = 1
+    if not np.isscalar(sro):
+        sro_max = np.max(np.abs(sro))
+    else:
+        sro_max = abs(sro)
+    while fft_size * sro_max * 1e-6 > 1:
+        fft_size = fft_size // 2
+        reps *= 2
+    if reps > 1:
+        sro = np.tile(sro[:, None], (1, reps)).reshape(-1)
+
     if not np.isscalar(sro):
         sro = np.asarray(sro)
         max_block_idx = len(sro)
