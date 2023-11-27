@@ -316,7 +316,7 @@ def synchronizing_block_online_mvdr(
     }
 
     Args:
-        target_speaker (in):
+        target_speaker (int):
             Identifier of the speaker whose signal should be extracted.
         sigs (np.ndarray):
             Speech mixture (Shape: (number of channels x signal length))
@@ -325,11 +325,11 @@ def synchronizing_block_online_mvdr(
             (number of speakers + 1 x FFT-size / 2 + 1 x number of frames))
         activities (np.ndarray):
             Activity of the sources (speakers + noise) used for SCM estimation
-            and calcuation of the time-varying beamformer coefficients (Shape:
+            and calculation of the time-varying beamformer coefficients (Shape:
             (number of speakers + 1 x number of frames))
         mic_groups (list of lists):
             Groups of microphones sharing the same SRO. The first group defines
-             the refrence for SRO estimation.
+             the reference for SRO estimation.
         activities_segmentation (np.ndarray):
             Activity of the target speaker used to segment the enhanced signal
             into utterances by discarding silence (Shape: (number of frames)).
@@ -350,7 +350,7 @@ def synchronizing_block_online_mvdr(
             estimation. This also defines the rate of the SRO estimates.
         block_size (int):
             Amount of frames involved in a block-wise update of the frames and
-            beamformer coffeicients,
+            beamformer coefficients,
         fft_size (int):
             FFT size used to calculate the STFT.
         frame_size (int):
@@ -367,7 +367,7 @@ def synchronizing_block_online_mvdr(
     Returns:
         enhanced_utts (list of np.ndarrays):
             List of extracted ``utterances´´ of the given target speaker.
-            An ``utterance´´ is defined by the section of contiguous activity
+            An ``utterance´´ is defined by the section of continuous activity
             of the target speaker.
         sro_trajectories (list of np.ndarrays):
             List of estimated SRO trajectories per group of microphones sharing
