@@ -65,7 +65,7 @@ def compensate_sro(sig, sro, fft_size=8192):
     while fft_size * sro_max * 1e-6 > 1:
         fft_size = fft_size // 2
         reps *= 2
-    if reps > 1:
+    if reps > 1 and not np.isscalar(sro):
         sro = np.tile(sro[:, None], (1, reps)).reshape(-1)
 
     if not np.isscalar(sro):
