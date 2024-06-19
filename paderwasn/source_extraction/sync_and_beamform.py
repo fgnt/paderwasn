@@ -236,7 +236,7 @@ def _estimate_sros(
     # practice, the SRO is here estimated  w.r.t. the first channel of the
     # first microphone group.
     ref_mic_group = mic_groups[0]
-    if len(ref_mic_group) > 1:
+    if len(ref_mic_group) >= 1:
         ref_mic = ref_mic_group[0]
     else:
         ref_mic = ref_mic_group
@@ -299,7 +299,8 @@ def synchronizing_block_online_mvdr(
         target_speaker, sigs, masks, activities, mic_groups=None,
         activities_segmentation=None, multi_ch_sro_est=True, noise_class=-1,
         block_shift_bf=32, block_shift_scm=8, block_size=32, fft_size=1024,
-        frame_size=1024, frame_shift=256, alpha=.95, settling_time=20
+        frame_size=1024, frame_shift=256, alpha=.95, settling_time=20,
+        return_onset=False
 ):
     """
     Joint sampling rate offset synchronization and source extraction via
@@ -364,6 +365,8 @@ def synchronizing_block_online_mvdr(
             Amount of block with suitable source activity after which the SRO
             is estimated for the first time and the compensation for SROs is
             started.
+        return_onset (boolean):
+            Flag indicating whether list of segment onsets should be returned.
     Returns:
         enhanced_utts (list of np.ndarrays):
             List of extracted ``utterances´´ of the given target speaker.
@@ -384,6 +387,11 @@ def synchronizing_block_online_mvdr(
     msg = (f'block_shift_bf ({block_shift_bf}) has to be larger than '
            f'or equal to block_shift_scm ({block_shift_scm}).')
     assert block_shift_bf >= block_shift_scm, msg
+
+    # adapt to STFT padding, which was used for mask estimation
+    pad_width = np.zeros((sigs.ndim, 2), dtype=np.int)
+    pad_width[-1, :] = frame_size - frame_shift
+    sigs = np.pad(sigs, pad_width, mode='constant')
 
     k = np.arange(fft_size // 2 + 1)
     window = signal.windows.blackman(frame_size + 1)[:-1]
@@ -517,7 +525,8 @@ def synchronizing_block_online_mvdr(
                     eigen_vector, block_size, frame_shift, num_chs
                 )
 
-        sro_buffer[-1] = sros.copy()
+        if len(sro_buffer) != 0:
+            sro_buffer[-1] = sros.copy()
         if update_cnt == settling_time and not started:
             avg_coherence_prod = \
                 np.zeros((fft_size, num_chs, num_chs), np.complex128)
@@ -549,5 +558,7 @@ def synchronizing_block_online_mvdr(
     )
     target_activity = target_activity.squeeze(0)
     target_activity = bridge_pauses_transcription(target_activity)
-    enhanced_utts, *_ = segment_by_activity(enh_sig, target_activity)
+    enhanced_utts, num_samples, onsets = segment_by_activity(enh_sig, target_activity)
+    if return_onset:
+        return enhanced_utts, sro_trajectories, onsets
     return enhanced_utts, sro_trajectories
