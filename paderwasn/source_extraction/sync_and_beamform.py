@@ -388,7 +388,7 @@ def synchronizing_block_online_mvdr(
            f'or equal to block_shift_scm ({block_shift_scm}).')
     assert block_shift_bf >= block_shift_scm, msg
 
-    # adapt to STFT padding for alignment
+    # adapt to STFT padding, which was used for mask estimation
     pad_width = np.zeros((sigs.ndim, 2), dtype=np.int)
     pad_width[-1, :] = frame_size - frame_shift
     sigs = np.pad(sigs, pad_width, mode='constant')

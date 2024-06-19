@@ -46,8 +46,8 @@ $ python -m paderwasn.experiments.sto_estimation with 'db_json="/PATH/TO/ASYC_WA
 ``` 
 
 ## Source separation
-This example shows the transcription performance of the integrated sampling rate synchronization and acoustic beamforming approach
-on [LibriWASN](https://github.com/fgnt/libriwasn/blob/main/libriwasn/reference_system/separate_sources.py]) [5] with varying microphone constellations
+This example shows the transcription performance of the integrated sampling rate synchronization and acoustic beamforming approach proposed in [5]
+on [LibriWASN](https://github.com/fgnt/libriwasn/blob/main/libriwasn/reference_system/separate_sources.py]) [6] with varying microphone constellations
 and compares it with the LibriWASN [reference system](https://github.com/fgnt/libriwasn/blob/main/libriwasn/reference_system/separate_sources.py) which uses the dynamic weighted average coherence
 drift (DWACD) method for SRO estimation from [3].
 Firstly, time-frequency masks are estimated using a complex Angular Central Gaussian Mixture Model (cACGMM).
@@ -66,10 +66,10 @@ For the generation of transcriptions and WERs, follow the instructions from the 
 
 ### Results
 #### Setup
-- As reference device, "asnupb4" is used, which provides 6 channels on which the time-frequency masks and sampling rate synchronization are estimated in all following setups.
+- "asnupb4" (6 channels) is used to for the estimation of time-frequency masks using all channels and as reference device for sampling rate synchronization in all following setups.
 - Setup "single" uses these 6 channels for the beamforming referring to a single-array scenario identical to "sys2" of the LibriWASN reference system.
-- Setup "extended" uses these 6 channels and additional the first channel of "asnupb2" and "asnupb7" for the beamforming which constitutes a scenario of a single-array with two additional asynchronous microphones with overall 8 channels from 3 different devices.
-- Setup "extended" uses the firts channel of all devices present in LibriWASN recordings for the beamforming which is analog to "sys3" of the LibriWASN reference system with overall 9 channels from 9 different devices.
+- Setup "extended" uses these 6 channels and additional the first channel of "asnupb2" and "asnupb7" for the beamforming which constitutes a scenario of a single-array with two additional asynchronous microphones with overall 8 channels from 3 different devices. This corresponds to the simulated setup "Array + 2 async. mics" used in [5]. 
+- Setup "all" uses the first channel of all devices present in LibriWASN recordings for the beamforming which is analog to "sys3" of the LibriWASN reference system with overall 9 channels from 9 different devices.
 - Thy column "Sync." refers to the sampling rate offset estimation method used whereas "DWACD" refers to the LibriWASN reference system whereas "SCM" refers to the  integrated sampling rate synchronization and acoustic beamforming approach of this example. 
 
 #### cpWER / % for LibriWASN200  
@@ -115,6 +115,10 @@ arXiv:2110.12820.
 Networks with Packet Loss,” in Proc. 29th European Signal Processing Conference
 (EUSIPCO), 2021, pp. 1–5.
 
-[5] Schmalenstroeer, J., Gburrek, T., Haeb-Umbach, R.:
+[5]  Gburrek, T., Schmalenstroeer, J., Haeb-Umbach, R.:
+“On the Integration of Sampling Rate Synchronization and Acoustic Beamforming”. in Proc. European Signal Processing Conference
+(EUSIPCO), 2023.
+
+[6] Schmalenstroeer, J., Gburrek, T., Haeb-Umbach, R.:
 "LibriWASN: A Data Set for Meeting Separation, Diarization, and Recognition with Asynchronous Recording Devices",
 in Proc. 15th ITG conference on Speech Communication, 2023, pp.86 - 91
