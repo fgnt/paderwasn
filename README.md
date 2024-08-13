@@ -32,6 +32,8 @@ $ pip install --user -e paderwasn
         + Simulation of a (time-varying) SRO [3]
     + [Source extraction in ad-hoc acoustic sensor networks via beamforming](paderwasn/source_extraction):
         + Integrated sampling rate synchronization and acoustic beamforming [5]
+    + [Room impulse response (RIR) simulation](paderwasn/rir_simulation)
+      +  Combined geometric and stochastic modeling of RIRs [6]
     
 * Databases:
     + [Geometry calibration observations](paderwasn/databases/geometry_calibration): Collection of direction-of-arrival (DoA) and source-node distance
@@ -109,6 +111,10 @@ Networks with Packet Loss,” in Proc. 29th European Signal Processing Conferenc
 “On the Integration of Sampling Rate Synchronization and Acoustic Beamforming”. in Proc. European Signal Processing Conference
 (EUSIPCO), 2023.
 
+[6]  Gburrek, T., Meise, A., Schmalenstroeer, J., Haeb-Umbach, R.:
+“Diminishing Domain Mismatch for DNN-Based Acoustic Distance Estimation
+via Stochastic Room Reverberation Models”. Accepted at IWAENC 2024.
+
 ## Citation
 If you are using the code or one of the provided databases please cite the
 corresponding paper (If you use the asynchronous WASN database please cite [3]):
@@ -161,7 +167,7 @@ corresponding paper (If you use the asynchronous WASN database please cite [3]):
     author={Gburrek, Tobias and Schmalenstroeer, Joerg and Haeb-Umbach, Reinhold},
 	booktitle = {31st European Signal Processing Conference (EUSIPCO)},
 	pages = {1--5},
-	title = {{On the Integration of Sampling Rate Synchronization and Acoustic Beamforming}},
+	title = {On the Integration of Sampling Rate Synchronization and Acoustic Beamforming},
 	year = {2023},
 }
  ```
