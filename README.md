@@ -113,7 +113,7 @@ Networks with Packet Loss,” in Proc. 29th European Signal Processing Conferenc
 
 [6]  Gburrek, T., Meise, A., Schmalenstroeer, J., Haeb-Umbach, R.:
 “Diminishing Domain Mismatch for DNN-Based Acoustic Distance Estimation
-via Stochastic Room Reverberation Models”. accepted to IWAENC 2024.
+via Stochastic Room Reverberation Models”. Accepted at IWAENC 2024.
 
 ## Citation
 If you are using the code or one of the provided databases please cite the
