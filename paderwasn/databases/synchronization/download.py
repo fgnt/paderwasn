@@ -17,7 +17,7 @@ def config():
     assert database in databases, msg
     libri_url = 'http://www.openslr.org/resources/12/test-clean.tar.gz'
     async_wasn_url = \
-        'https://zenodo.org/record/5679070/files/async_wasn.tar.gz'
+        'https://zenodo.org/record/15111025/files/async_wasn.tar.gz'
 
 
 @ex.automain
